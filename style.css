@@ -1,0 +1,56 @@
+.MainContainer {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+}
+
+.Wrap {
+    display: flex;
+    padding: 40px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn {
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 0 20px;
+    margin: 10px;
+    outline: none;
+    border: none;
+    border-radius: 4px;
+    height: 32px;
+    line-height: 32px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    color: #fff;
+    background-color: #dd3737;
+    box-shadow: 0 2px #7f2121;
+    cursor: pointer;
+    user-select: none;
+    appearance: none;
+    touch-action: manipulation;
+    vertical-align: top;
+}
+
+.btn:hover {
+    background-color: #ff4b4b;
+}
+
+
+.Car {
+    width: 150px;
+    height: 100px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: url('assets/car2.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    /* background-color: rgba(0, 255, 0, 0.3);
+    background-blend-mode: overlay;
+    border-radius: 30%; */
+}
