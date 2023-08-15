@@ -9,9 +9,6 @@ class InputController {
     btnsPresed;
 
     constructor(actionsToBind, target) {
-        this.PressHandler = this.PressHandler.bind(this);
-        this.WringHandler = this.WringHandler.bind(this);
-
         this.attachFlag = false;
         this.activityList = actionsToBind;
         this.target = target;
@@ -46,7 +43,7 @@ class InputController {
     }
 
     isActionActive(action) {
-        if (this.attachFlag !== false) {
+        if (this.attachFlag) {
             for (let i = 0; i < activityList[action].keys.length; i++) {
                 if (this.isKeyPressed(activityList[action].keys[i])) {
                     return this.activityList[action].enabled;
@@ -62,8 +59,8 @@ class InputController {
     //--------------------------------------------------------------------
 
     activation() {
-        document.addEventListener('keydown', this.PressHandler);
-        document.addEventListener('keyup', this.WringHandler);
+        document.addEventListener('keydown', this.PressHandler.bind(this));
+        document.addEventListener('keyup', this.WringHandler.bind(this));
     }
 
     deactivation() {
