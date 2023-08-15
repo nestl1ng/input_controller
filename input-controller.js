@@ -12,7 +12,9 @@ class InputController {
         this.activityList = actionsToBind;
         this.target = target;
 
-        this.attachFlag = false;
+        this.pressHandler = this.pressHandler.bind(this);
+        this.wringHandler = this.wringHandler.bind(this);
+        this.enabled = false;
         this.btnsPressed = {};
     }
 
@@ -30,27 +32,30 @@ class InputController {
 
     attach(target, dontEnable) {
         if (dontEnable) {
-            this.attachFlag = false;
+            this.enabled = false;
             this.target = null;
         } else {
-            this.attachFlag = true;
+            this.enabled = true;
             this.target = target;
+            document.addEventListener('keydown', this.pressHandler);
+            document.addEventListener('keyup', this.wringHandler);
         }
     }
 
     detach() {
         this.target = null;
-        this.attachFlag = false;
+        this.enabled = false;
+        document.removeEventListener('keydown', this.pressHandler);
+        document.removeEventListener('keyup', this.wringHandler);
     }
 
     isActionActive(action) {
-        if (this.activityList.hasOwnProperty(action) && this.attachFlag && this.activityList[action].hasOwnProperty('keys')) {
-            for (let i = 0; i < this.activityList[action].keys.length; i++) {
-                if (this.isKeyPressed(this.activityList[action].keys[i])) {
-                    return this.activityList[action].enabled;
-                }
-            }
-        }
+        if (this.activityList.hasOwnProperty(action)
+            && this.enabled
+            && this.activityList[action].hasOwnProperty('keys')
+            && this.activityList[action].enabled) {
+            return this.activityList[action].keys.some((item) => this.isKeyPressed(item));
+        } return false
     }
 
     isKeyPressed(keyCode) {
@@ -59,24 +64,15 @@ class InputController {
 
     //--------------------------------------------------------------------
 
-    activation() {
-        document.addEventListener('keydown', this.PressHandler.bind(this));
-        document.addEventListener('keyup', this.WringHandler.bind(this));
+    pressHandler(props) {
+        this.btnsPressed[props.keyCode] = props.keyCode;
+        console.log(this.btnsPressed);
     }
 
-    deactivation() {
-        document.removeEventListener('keydown', this.PressHandler);
-        document.removeEventListener('keyup', this.WringHandler);
-    }
-
-    PressHandler(props) {
-        if (!this.btnsPressed.hasOwnProperty(props.keyCode)) {
-            this.btnsPressed[props.keyCode] = props.keyCode;
-        }
-    }
-
-    WringHandler(props) {
+    wringHandler(props) {
         delete this.btnsPressed[props.keyCode];
+        console.log(this.btnsPressed);
     }
 
 }
+

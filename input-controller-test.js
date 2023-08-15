@@ -6,19 +6,17 @@ const activityList = {
     "down": {
         keys: [40, 83],
         enabled: true
-    }
-};
-
-const activityList2 = {
+    },
     "left": {
         keys: [37, 65],
         enabled: true
     },
     "right": {
         keys: [39, 68],
-        enabled: false
+        enabled: true
     }
 };
+
 
 const dopActivityList = {
     "jump": {
@@ -32,14 +30,10 @@ const target = document.querySelector('.Car');
 const controller = new InputController(activityList, target);
 
 
-controller.bindActions(activityList2);
-controller.enableAction('right');
-// controller.disableAction('right');
-
 window.requestAnimationFrame(Move);
 let x = 50;
 let y = 50;
-let color = 'green';
+//let color = 'green';
 function Move() {
     if (controller.isActionActive('right')) {
         x += 0.2;
@@ -64,15 +58,6 @@ function Move() {
     window.requestAnimationFrame(Move)
 }
 
-const activation = document.querySelector('.Activation');
-activation.onclick = () => {
-    controller.activation();
-};
-
-const deactivation = document.querySelector('.Deactivation');
-deactivation.onclick = () => {
-    controller.deactivation();
-};
 
 const attach = document.querySelector('.Attach');
 attach.onclick = () => {
