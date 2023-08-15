@@ -50,7 +50,6 @@
     background: url('assets/car2.png');
     background-size: contain;
     background-repeat: no-repeat;
-    /* background-color: rgba(0, 255, 0, 0.3);
-    background-blend-mode: overlay;
-    border-radius: 30%; */
+    background-color: green;
+    border-radius: 30%; 
 }

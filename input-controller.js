@@ -6,25 +6,26 @@ class InputController {
 
     activityList;
     target;
-    btnsPresed;
+    btnsPressed;
 
     constructor(actionsToBind, target) {
-        this.attachFlag = false;
         this.activityList = actionsToBind;
         this.target = target;
-        this.btnsPresed = {};
+
+        this.attachFlag = false;
+        this.btnsPressed = {};
     }
 
     bindActions(actionsToBind) {
-
+        this.activityList = Object.assign(this.activityList, actionsToBind);
     }
 
     enableAction(actionName) {
-
+        this.activityList[actionName].enabled = true;
     }
 
     disableAction(actionName) {
-
+        this.activityList[actionName].enabled = false;
     }
 
     attach(target, dontEnable) {
@@ -43,9 +44,9 @@ class InputController {
     }
 
     isActionActive(action) {
-        if (this.attachFlag) {
-            for (let i = 0; i < activityList[action].keys.length; i++) {
-                if (this.isKeyPressed(activityList[action].keys[i])) {
+        if (this.activityList.hasOwnProperty(action) && this.attachFlag && this.activityList[action].hasOwnProperty('keys')) {
+            for (let i = 0; i < this.activityList[action].keys.length; i++) {
+                if (this.isKeyPressed(this.activityList[action].keys[i])) {
                     return this.activityList[action].enabled;
                 }
             }
@@ -53,7 +54,7 @@ class InputController {
     }
 
     isKeyPressed(keyCode) {
-        return this.btnsPresed.hasOwnProperty(keyCode);
+        return this.btnsPressed.hasOwnProperty(keyCode);
     }
 
     //--------------------------------------------------------------------
@@ -68,16 +69,14 @@ class InputController {
         document.removeEventListener('keyup', this.WringHandler);
     }
 
-    PressHandler(e) {
-        if (!this.btnsPresed.hasOwnProperty(e.keyCode)) {
-            this.btnsPresed[e.keyCode] = e.keyCode;
+    PressHandler(props) {
+        if (!this.btnsPressed.hasOwnProperty(props.keyCode)) {
+            this.btnsPressed[props.keyCode] = props.keyCode;
         }
-        console.log(this.btnsPresed);
     }
 
-    WringHandler(e) {
-        delete this.btnsPresed[e.keyCode];
-        console.log(this.btnsPresed);
+    WringHandler(props) {
+        delete this.btnsPressed[props.keyCode];
     }
 
 }
