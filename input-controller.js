@@ -12,7 +12,7 @@ class InputController {
         this.attachFlag = false;
         this.activityList = actionsToBind;
         this.target = target;
-        this.btnsPresed = [];
+        this.btnsPresed = {};
     }
 
     bindActions(actionsToBind) {
@@ -53,7 +53,7 @@ class InputController {
     }
 
     isKeyPressed(keyCode) {
-        return this.btnsPresed.includes(keyCode);
+        return this.btnsPresed.hasOwnProperty(keyCode);
     }
 
     //--------------------------------------------------------------------
@@ -69,14 +69,14 @@ class InputController {
     }
 
     PressHandler(e) {
-        if (!this.btnsPresed.includes(e.keyCode)) {
-            this.btnsPresed.push(e.keyCode);
+        if (!this.btnsPresed.hasOwnProperty(e.keyCode)) {
+            this.btnsPresed[e.keyCode] = e.keyCode;
         }
         console.log(this.btnsPresed);
     }
 
     WringHandler(e) {
-        this.btnsPresed.splice(this.btnsPresed.indexOf(e.keyCode), 1);
+        delete this.btnsPresed[e.keyCode];
         console.log(this.btnsPresed);
     }
 
