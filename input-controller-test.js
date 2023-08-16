@@ -1,58 +1,38 @@
-const activityList = {
-    "up": {
-        keys: [38, 87],
-        enabled: true
-    },
-    "down": {
-        keys: [40, 83],
-        enabled: true
-    },
-    "left": {
-        keys: [37, 65],
-        enabled: true
-    },
-    "right": {
-        keys: [39, 68],
-        enabled: true
-    }
-};
-
-
-const dopActivityList = {
-    "jump": {
-        keys: [32],
-        enabled: true
-    },
-};
+import { activityList, dopActivityList } from './plugin-settings.js'
+import { InputController } from "./input-controller.js"
+import { KeyBoard } from "./keyboard-plugin.js"
+import {Mouse} from "./mouse-plugin.js"
 
 
 const target = document.querySelector('.Car');
-const controller = new InputController(activityList, target);
 
+const inputController = new InputController(activityList, target);
+const keyBoard = new KeyBoard();
+const mouse= new Mouse();
+
+inputController.pluginsAdd(keyBoard,mouse);
 
 window.requestAnimationFrame(Move);
 let x = 50;
 let y = 50;
-//let color = 'green';
 function Move() {
-    if (controller.isActionActive('right')) {
+    if (keyBoard.isActionActive('right')||mouse.isActionActive('right')) {
         x += 0.2;
         target.style.left = `${x}%`;
     }
-    if (controller.isActionActive('left')) {
+    if (keyBoard.isActionActive('left')||mouse.isActionActive('left')) {
         x -= 0.2;
         target.style.left = `${x}%`;
     }
-    if (controller.isActionActive('up')) {
+    if (keyBoard.isActionActive('up')) {
         y -= 0.2;
         target.style.top = `${y}%`;
     }
-    if (controller.isActionActive('down')) {
+    if (keyBoard.isActionActive('down')) {
         y += 0.2;
         target.style.top = `${y}%`;
     }
-    if (controller.isActionActive('jump')) {
-        //color = target.style.backgroundColor = color === 'green' ? 'blue' : 'green';
+    if (keyBoard.isActionActive('jump')) {
         target.style.backgroundColor = 'blue'
     } else target.style.backgroundColor = 'green';
     window.requestAnimationFrame(Move)
@@ -61,15 +41,15 @@ function Move() {
 
 const attach = document.querySelector('.Attach');
 attach.onclick = () => {
-    controller.attach(target, false);
+    inputController.attach(target, false);
 };
 
 const detach = document.querySelector('.Detach');
 detach.onclick = () => {
-    controller.detach();
+    inputController.detach();
 };
 
 const jumbBind = document.querySelector('.Jumpbind');
 jumbBind.onclick = () => {
-    controller.bindActions(dopActivityList);
+    inputController.bindActions(dopActivityList);
 };

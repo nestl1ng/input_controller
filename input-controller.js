@@ -1,4 +1,4 @@
-class InputController {
+export class InputController {
     enabled;
     focused;
     ACTION_ACTIVATED = "input-controller:action-activated";
@@ -12,10 +12,8 @@ class InputController {
         this.activityList = actionsToBind;
         this.target = target;
 
-        this.pressHandler = this.pressHandler.bind(this);
-        this.wringHandler = this.wringHandler.bind(this);
+        this.plugins = [];
         this.enabled = false;
-        this.btnsPressed = {};
     }
 
     bindActions(actionsToBind) {
@@ -23,11 +21,15 @@ class InputController {
     }
 
     enableAction(actionName) {
-        this.activityList[actionName].enabled = true;
+        if (!this.enabled) {
+            this.activityList[actionName].enabled = true;
+        }
     }
 
     disableAction(actionName) {
-        this.activityList[actionName].enabled = false;
+        if (this.enabled) {
+            this.activityList[actionName].enabled = false;
+        }
     }
 
     attach(target, dontEnable) {
@@ -37,42 +39,24 @@ class InputController {
         } else {
             this.enabled = true;
             this.target = target;
-            document.addEventListener('keydown', this.pressHandler);
-            document.addEventListener('keyup', this.wringHandler);
+            this.plugins.forEach((plugin) => {
+                plugin.attachPlugin();
+            })
         }
     }
 
     detach() {
         this.target = null;
         this.enabled = false;
-        document.removeEventListener('keydown', this.pressHandler);
-        document.removeEventListener('keyup', this.wringHandler);
-    }
-
-    isActionActive(action) {
-        if (this.activityList.hasOwnProperty(action)
-            && this.enabled
-            && this.activityList[action].hasOwnProperty('keys')
-            && this.activityList[action].enabled) {
-            return this.activityList[action].keys.some((item) => this.isKeyPressed(item));
-        } return false
-    }
-
-    isKeyPressed(keyCode) {
-        return this.btnsPressed.hasOwnProperty(keyCode);
+        this.plugins.forEach((plugin) => {
+            plugin.detachPlugin();
+        })
     }
 
     //--------------------------------------------------------------------
 
-    pressHandler(props) {
-        this.btnsPressed[props.keyCode] = props.keyCode;
-        console.log(this.btnsPressed);
-    }
-
-    wringHandler(props) {
-        delete this.btnsPressed[props.keyCode];
-        console.log(this.btnsPressed);
+    pluginsAdd() {
+        this.plugins.push(...argumens);
     }
 
 }
-
