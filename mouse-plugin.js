@@ -1,4 +1,6 @@
 import { activityList } from './plugin-settings.js'
+import { inputController } from "./input-controller.js"
+
 export class Mouse {
 
     constructor() {
@@ -6,7 +8,6 @@ export class Mouse {
 
         this.mousePressHandler = this.mousePressHandler.bind(this);
         this.mouseWringHandler = this.mouseWringHandler.bind(this);
-        this.activityList = activityList;
     }
 
     attachPlugin() {
@@ -20,11 +21,24 @@ export class Mouse {
     }
 
     mousePressHandler(props) {
-         this.btnsPressed[props.button] = props.button;
+        this.btnsPressed[props.button] = props.button;
+        for (let activityList in inputController.actionsToBind) {
+            if (inputController.actionsToBind[activityList].click.includes(props.button)) {
+                inputController.actionsToBind[activityList].active = true;
+                document.dispatchEvent(inputController.actionActivated);
+
+            }
+        }
     }
 
     mouseWringHandler(props) {
         delete this.btnsPressed[props.button];
+        for (let activityList in inputController.actionsToBind) {
+            if (inputController.actionsToBind[activityList].click.includes(props.button)) {
+                inputController.actionsToBind[activityList].active = false;
+                document.dispatchEvent(inputController.actionDeactivated);
+            }
+        }
     }
 
 
@@ -33,9 +47,9 @@ export class Mouse {
     }
 
     isActionActive(action) {
-        if (this.activityList.hasOwnProperty(action)
-            && this.activityList[action].enabled) {
-            return this.activityList[action].click.some((item) => this.isKeyPressed(item));
+        if (activityList.hasOwnProperty(action)
+            && activityList[action].enabled) {
+            return activityList[action].click.some((item) => this.isKeyPressed(item));
         } return false
     }
 }

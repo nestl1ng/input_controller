@@ -1,34 +1,46 @@
-export class InputController {
+import { activityList } from './plugin-settings.js'
+class InputController {
     enabled;
     focused;
     ACTION_ACTIVATED = "input-controller:action-activated";
     ACTION_DEACTIVATED = "input-controller:action-deactivated";
 
-    activityList;
+    actionsToBind;
     target;
     btnsPressed;
 
-    constructor(actionsToBind, target) {
-        this.activityList = actionsToBind;
-        this.target = target;
+    constructor(actionsToBind) {
+        this.actionsToBind = actionsToBind;
 
+        this.targe;
         this.plugins = [];
         this.enabled = false;
+        this.actionActivated = new Event(this.ACTION_ACTIVATED);
+        this.actionDeactivated = new Event(this.ACTION_DEACTIVATED);
     }
 
+    isActionActive(actionName) {
+        if (typeof this.actionsToBind[actionName] !== 'undefined') {
+            if (this.enabled && this.actionsToBind[actionName].enabled) {
+                return this.actionsToBind[actionName].active;
+            } return false
+        }
+    }
+
+
     bindActions(actionsToBind) {
-        this.activityList = Object.assign(this.activityList, actionsToBind);
+        this.actionsToBind = Object.assign(this.actionsToBind, actionsToBind);
     }
 
     enableAction(actionName) {
         if (!this.enabled) {
-            this.activityList[actionName].enabled = true;
+            this.actionsToBind[actionName].enabled = true;
         }
     }
 
     disableAction(actionName) {
         if (this.enabled) {
-            this.activityList[actionName].enabled = false;
+            this.actionsToBind[actionName].enabled = false;
         }
     }
 
@@ -56,7 +68,12 @@ export class InputController {
     //--------------------------------------------------------------------
 
     pluginsAdd() {
-        this.plugins.push(...argumens);
+        this.plugins.push(...arguments);
+    }
+
+    setTarget(target) {
+        this.target = target;
     }
 
 }
+export const inputController = new InputController(activityList);

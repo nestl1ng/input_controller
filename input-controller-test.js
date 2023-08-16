@@ -1,42 +1,83 @@
-import { activityList, dopActivityList } from './plugin-settings.js'
-import { InputController } from "./input-controller.js"
+import { dopActivityList } from './plugin-settings.js'
+import { inputController } from "./input-controller.js"
 import { KeyBoard } from "./keyboard-plugin.js"
-import {Mouse} from "./mouse-plugin.js"
+import { Mouse } from "./mouse-plugin.js"
 
 
 const target = document.querySelector('.Car');
 
-const inputController = new InputController(activityList, target);
 const keyBoard = new KeyBoard();
-const mouse= new Mouse();
+const mouse = new Mouse();
 
-inputController.pluginsAdd(keyBoard,mouse);
+inputController.setTarget(target);
+inputController.pluginsAdd(keyBoard, mouse);
 
-window.requestAnimationFrame(Move);
 let x = 50;
 let y = 50;
-function Move() {
-    if (keyBoard.isActionActive('right')||mouse.isActionActive('right')) {
-        x += 0.2;
-        target.style.left = `${x}%`;
+
+const actionActivatedEvent = () => {
+    if (inputController.isActionActive('right')) {
+        if (keyBoard.isActionActive('right') || mouse.isActionActive('right')) {
+            x += 0.2;
+            target.style.left = `${x}%`;
+        }
     }
-    if (keyBoard.isActionActive('left')||mouse.isActionActive('left')) {
-        x -= 0.2;
-        target.style.left = `${x}%`;
+    if (inputController.isActionActive('left')) {
+        if (keyBoard.isActionActive('left') || mouse.isActionActive('left')) {
+            x -= 0.2;
+            target.style.left = `${x}%`;
+        }
     }
-    if (keyBoard.isActionActive('up')) {
-        y -= 0.2;
-        target.style.top = `${y}%`;
+    if (inputController.isActionActive('up')) {
+        if (keyBoard.isActionActive('up')) {
+            y -= 0.2;
+            target.style.top = `${y}%`;
+        }
     }
-    if (keyBoard.isActionActive('down')) {
-        y += 0.2;
-        target.style.top = `${y}%`;
+    if (inputController.isActionActive('down')) {
+        if (keyBoard.isActionActive('down')) {
+            y += 0.2;
+            target.style.top = `${y}%`;
+        }
     }
-    if (keyBoard.isActionActive('jump')) {
-        target.style.backgroundColor = 'blue'
-    } else target.style.backgroundColor = 'green';
-    window.requestAnimationFrame(Move)
+    if (inputController.isActionActive('jump')) {
+        if (keyBoard.isActionActive('jump')) {
+            target.style.backgroundColor = 'blue'
+        } 
+    }
 }
+const actionDeactivatedEvent = () => {
+    if (!inputController.isActionActive('right')) {
+        if (!keyBoard.isActionActive('right') || !mouse.isActionActive('right')) {
+            target.style.left = `${x}%`;
+        }
+    }
+    if (!inputController.isActionActive('left')) {
+        if (!keyBoard.isActionActive('left') || !mouse.isActionActive('left')) {
+            target.style.left = `${x}%`;
+        }
+    }
+    if (!inputController.isActionActive('up')) {
+        if (!keyBoard.isActionActive('up')) {
+            target.style.top = `${y}%`;
+        }
+    }
+    if (!inputController.isActionActive('down')) {
+        if (!keyBoard.isActionActive('down')) {
+            target.style.top = `${y}%`;
+        }
+    }
+    if (!inputController.isActionActive('jump')) {
+        if (!keyBoard.isActionActive('jump')) {
+            target.style.backgroundColor = 'green';
+        }
+    }
+}
+const addEvents = () => {
+    document.addEventListener(inputController.ACTION_ACTIVATED, actionActivatedEvent);
+    document.addEventListener(inputController.ACTION_DEACTIVATED, actionDeactivatedEvent);
+}
+addEvents();
 
 
 const attach = document.querySelector('.Attach');

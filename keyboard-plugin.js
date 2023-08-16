@@ -1,4 +1,6 @@
 import { activityList } from './plugin-settings.js'
+import { inputController } from "./input-controller.js"
+
 export class KeyBoard {
 
     constructor() {
@@ -6,7 +8,6 @@ export class KeyBoard {
 
         this.pressHandler = this.pressHandler.bind(this);
         this.wringHandler = this.wringHandler.bind(this);
-        this.activityList = activityList;
     }
 
     attachPlugin() {
@@ -21,10 +22,22 @@ export class KeyBoard {
 
     pressHandler(props) {
         this.btnsPressed[props.keyCode] = props.keyCode;
+        for (let activityList in inputController.actionsToBind) {
+            if (inputController.actionsToBind[activityList].keys.includes(props.keyCode)) {
+                inputController.actionsToBind[activityList].active = true;
+                document.dispatchEvent(inputController.actionActivated);
+            }
+        }
     }
 
     wringHandler(props) {
         delete this.btnsPressed[props.keyCode];
+        for (let activityList in inputController.actionsToBind) {
+            if (inputController.actionsToBind[activityList].keys.includes(props.keyCode)) {
+                inputController.actionsToBind[activityList].active = false;
+                document.dispatchEvent(inputController.actionDeactivated);
+            }
+        }
     }
 
 
@@ -33,9 +46,9 @@ export class KeyBoard {
     }
 
     isActionActive(action) {
-        if (this.activityList.hasOwnProperty(action)
-            && this.activityList[action].enabled) {
-            return this.activityList[action].keys.some((item) => this.isKeyPressed(item));
+        if (activityList.hasOwnProperty(action)
+            && activityList[action].enabled) {
+            return activityList[action].keys.some((item) => this.isKeyPressed(item));
         } return false
     }
 }
