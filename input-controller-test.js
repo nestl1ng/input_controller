@@ -14,7 +14,7 @@ inputController.pluginsAdd(keyBoard, mouse);
 
 let x = 50;
 let y = 50;
-
+let color = 'green';
 window.requestAnimationFrame(Move);
 function Move() {
     if (inputController.isActionActive('right')) {
@@ -34,8 +34,8 @@ function Move() {
         target.style.top = `${y}%`;
     }
     if (inputController.isActionActive('jump')) {
-        target.style.backgroundColor = 'blue'
-    } else target.style.backgroundColor = 'green';
+        color = target.style.backgroundColor = color === 'green' ? 'blue' : 'green';
+    } 
     window.requestAnimationFrame(Move)
 }
 
