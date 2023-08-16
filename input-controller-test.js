@@ -15,69 +15,29 @@ inputController.pluginsAdd(keyBoard, mouse);
 let x = 50;
 let y = 50;
 
-const actionActivatedEvent = () => {
+window.requestAnimationFrame(Move);
+function Move() {
     if (inputController.isActionActive('right')) {
-        if (keyBoard.isActionActive('right') || mouse.isActionActive('right')) {
-            x += 0.2;
-            target.style.left = `${x}%`;
-        }
+        x += 0.2;
+        target.style.left = `${x}%`;
     }
     if (inputController.isActionActive('left')) {
-        if (keyBoard.isActionActive('left') || mouse.isActionActive('left')) {
-            x -= 0.2;
-            target.style.left = `${x}%`;
-        }
+        x -= 0.2;
+        target.style.left = `${x}%`;
     }
     if (inputController.isActionActive('up')) {
-        if (keyBoard.isActionActive('up')) {
-            y -= 0.2;
-            target.style.top = `${y}%`;
-        }
+        y -= 0.2;
+        target.style.top = `${y}%`;
     }
     if (inputController.isActionActive('down')) {
-        if (keyBoard.isActionActive('down')) {
-            y += 0.2;
-            target.style.top = `${y}%`;
-        }
+        y += 0.2;
+        target.style.top = `${y}%`;
     }
     if (inputController.isActionActive('jump')) {
-        if (keyBoard.isActionActive('jump')) {
-            target.style.backgroundColor = 'blue'
-        } 
-    }
+        target.style.backgroundColor = 'blue'
+    } else target.style.backgroundColor = 'green';
+    window.requestAnimationFrame(Move)
 }
-const actionDeactivatedEvent = () => {
-    if (!inputController.isActionActive('right')) {
-        if (!keyBoard.isActionActive('right') || !mouse.isActionActive('right')) {
-            target.style.left = `${x}%`;
-        }
-    }
-    if (!inputController.isActionActive('left')) {
-        if (!keyBoard.isActionActive('left') || !mouse.isActionActive('left')) {
-            target.style.left = `${x}%`;
-        }
-    }
-    if (!inputController.isActionActive('up')) {
-        if (!keyBoard.isActionActive('up')) {
-            target.style.top = `${y}%`;
-        }
-    }
-    if (!inputController.isActionActive('down')) {
-        if (!keyBoard.isActionActive('down')) {
-            target.style.top = `${y}%`;
-        }
-    }
-    if (!inputController.isActionActive('jump')) {
-        if (!keyBoard.isActionActive('jump')) {
-            target.style.backgroundColor = 'green';
-        }
-    }
-}
-const addEvents = () => {
-    document.addEventListener(inputController.ACTION_ACTIVATED, actionActivatedEvent);
-    document.addEventListener(inputController.ACTION_DEACTIVATED, actionDeactivatedEvent);
-}
-addEvents();
 
 
 const attach = document.querySelector('.Attach');

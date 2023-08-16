@@ -2,12 +2,13 @@ import { activityList } from './plugin-settings.js'
 import { inputController } from "./input-controller.js"
 
 export class KeyBoard {
-
+    enabled
     constructor() {
         this.btnsPressed = {};
 
         this.pressHandler = this.pressHandler.bind(this);
         this.wringHandler = this.wringHandler.bind(this);
+        this.enabled = true;
     }
 
     attachPlugin() {
@@ -21,11 +22,15 @@ export class KeyBoard {
     }
 
     pressHandler(props) {
-        this.btnsPressed[props.keyCode] = props.keyCode;
+        if(!this.isKeyPressed(props.keyCode)){
+            this.btnsPressed[props.keyCode] = props.keyCode;
+        }
         for (let activityList in inputController.actionsToBind) {
             if (inputController.actionsToBind[activityList].keys.includes(props.keyCode)) {
-                inputController.actionsToBind[activityList].active = true;
-                document.dispatchEvent(inputController.actionActivated);
+                if(!inputController.actionsToBind[activityList].active){
+                    inputController.actionsToBind[activityList].active = true;
+                    document.dispatchEvent(inputController.actionActivated);
+                }
             }
         }
     }
@@ -34,12 +39,13 @@ export class KeyBoard {
         delete this.btnsPressed[props.keyCode];
         for (let activityList in inputController.actionsToBind) {
             if (inputController.actionsToBind[activityList].keys.includes(props.keyCode)) {
-                inputController.actionsToBind[activityList].active = false;
-                document.dispatchEvent(inputController.actionDeactivated);
+                if(!inputController.checkBtnsPressed(activityList)){
+                    inputController.actionsToBind[activityList].active = false;
+                    document.dispatchEvent(inputController.actionDeactivated);
+                }
             }
         }
     }
-
 
     isKeyPressed(keyCode) {
         return this.btnsPressed.hasOwnProperty(keyCode);
@@ -50,5 +56,9 @@ export class KeyBoard {
             && activityList[action].enabled) {
             return activityList[action].keys.some((item) => this.isKeyPressed(item));
         } return false
+    }
+
+    checkAction(actionName){
+        return inputController.actionsToBind[actionName].keys.some((item)=>this.isKeyPressed(item));
     }
 }

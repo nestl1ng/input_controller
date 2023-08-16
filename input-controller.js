@@ -65,6 +65,10 @@ class InputController {
         })
     }
 
+    checkBtnsPressed(actionName){
+        return this.plugins.some((plugin)=>plugin.checkAction(actionName));
+    }
+
     //--------------------------------------------------------------------
 
     pluginsAdd() {

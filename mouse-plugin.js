@@ -24,9 +24,10 @@ export class Mouse {
         this.btnsPressed[props.button] = props.button;
         for (let activityList in inputController.actionsToBind) {
             if (inputController.actionsToBind[activityList].click.includes(props.button)) {
-                inputController.actionsToBind[activityList].active = true;
-                document.dispatchEvent(inputController.actionActivated);
-
+                if (!inputController.actionsToBind[activityList].active) {
+                    inputController.actionsToBind[activityList].active = true;
+                    document.dispatchEvent(inputController.actionActivated);
+                }
             }
         }
     }
@@ -35,8 +36,10 @@ export class Mouse {
         delete this.btnsPressed[props.button];
         for (let activityList in inputController.actionsToBind) {
             if (inputController.actionsToBind[activityList].click.includes(props.button)) {
-                inputController.actionsToBind[activityList].active = false;
-                document.dispatchEvent(inputController.actionDeactivated);
+                if (!inputController.checkBtnsPressed(activityList)) {
+                    inputController.actionsToBind[activityList].active = false;
+                    document.dispatchEvent(inputController.actionDeactivated);
+                }
             }
         }
     }
@@ -51,5 +54,9 @@ export class Mouse {
             && activityList[action].enabled) {
             return activityList[action].click.some((item) => this.isKeyPressed(item));
         } return false
+    }
+
+    checkAction(actionName){
+        return inputController.actionsToBind[actionName].click.some((item)=>this.isKeyPressed(item));
     }
 }
